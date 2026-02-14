@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Show Motos AGP - Precificação</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+font-family: Arial;
+background:#0d0d0d;
+color:white;
+padding:15px;
+}
+.header{
+text-align:center;
+margin-bottom:15px;
+}
+.logo{
+width:120px;
+margin-bottom:10px;
+}
+h2{
+color:#00ff88;
+margin:5px 0;
+}
+.contato{
+font-size:13px;
+color:#ccc;
+margin-bottom:15px;
+}
+input{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:none;
+border-radius:6px;
+font-size:16px;
+}
+button{
+width:100%;
+padding:14px;
+margin-top:10px;
+background:#00c853;
+border:none;
+color:white;
+font-weight:bold;
+font-size:16px;
+border-radius:6px;
+}
+button:hover{
+background:#00e676;
+}
+.resultado{
+margin-top:15px;
+background:#1a1a1a;
+padding:15px;
+border-radius:8px;
+font-size:15px;
+}
+.historico{
+margin-top:20px;
+background:#111;
+padding:10px;
+border-radius:8px;
+font-size:14px;
+}
+.item{
+border-bottom:1px solid #333;
+padding:5px 0;
+}
+.alerta{
+color:red;
+font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<img src="logo.jpg" class="logo">
+<h2>Precificação Show Motos AGP</h2>
+<div class="contato">
+WhatsApp: 66992330635<br>
+Instagram: @showmotosagp
+</div>
+</div>
+
+<label>Faturamento Mensal (R$)</label>
+<input type="number" id="faturamento">
+
+<label>Custo do Produto (R$)</label>
+<input type="number" id="custo">
+
+<label>Custos Variáveis (%)</label>
+<input type="number" id="variavel" value="15">
+
+<label>Custos Fixos (%)</label>
+<input type="number" id="fixo" value="10">
+
+<label>Outros (R$ mensal)</label>
+<input type="number" id="outros">
+
+<button onclick="calcular()">Calcular</button>
+
+<div class="resultado" id="resultado"></div>
+
+<div class="historico">
+<h3>📂 Histórico</h3>
+<div id="lista"></div>
+</div>
+
+<script>
+let historico = [];
+
+function calcular(){
+let faturamento = parseFloat(document.getElementById("faturamento").value);
+let custo = parseFloat(document.getElementById("custo").value);
+let variavel = parseFloat(document.getElementById("variavel").value)/100;
+let fixo = parseFloat(document.getElementById("fixo").value)/100;
+let outros = parseFloat(document.getElementById("outros").value);
+
+if(!faturamento || !custo || !outros){
+alert("Preencha todos os campos obrigatórios!");
+return;
+}
+
+let outrosPercent = outros / faturamento;
+let margem = 1 - (variavel + fixo + outrosPercent);
+
+if(margem <= 0){
+document.getElementById("resultado").innerHTML =
+"<span class='alerta'>⚠ Margem negativa! Ajuste seus custos.</span>";
+return;
+}
+
+let precoVenda = custo / margem;
+let lucro = precoVenda - custo;
+
+let alertaMargem = margem < 0.25 ? 
+"<div class='alerta'>⚠ Margem abaixo de 25%</div>" : "";
+
+document.getElementById("resultado").innerHTML =
+"<b>Outros (%):</b> " + (outrosPercent*100).toFixed(2) + "%<br>" +
+"<b>Margem:</b> " + (margem*100).toFixed(2) + "%<br>" +
+"<b>Preço Ideal:</b> R$ " + precoVenda.toFixed(2) + "<br>" +
+"<b>Lucro:</b> R$ " + lucro.toFixed(2) +
+alertaMargem;
+
+let registro = "Preço: R$ " + precoVenda.toFixed(2) +
+" | Lucro: R$ " + lucro.toFixed(2);
+
+historico.push(registro);
+mostrarHistorico();
+}
+
+function mostrarHistorico(){
+let lista = document.getElementById("lista");
+lista.innerHTML = "";
+historico.forEach(item=>{
+lista.innerHTML += "<div class='item'>" + item + "</div>";
+});
+}
+</script>
+
+</body>
+</html>
