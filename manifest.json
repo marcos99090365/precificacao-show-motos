@@ -1,6 +1,7 @@
 {
   "name": "Precificação Show Motos",
   "short_name": "Show Motos",
+  "description": "Aplicativo profissional de precificação da oficina Show Motos AGP.",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0d0d0d",
